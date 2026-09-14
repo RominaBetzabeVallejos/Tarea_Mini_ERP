@@ -1,56 +1,58 @@
-import './style.css';
+﻿import './style.css';
 import { authAPI, productsAPI } from './services/api.js';
-import { Login } from './components/Login.js';
-import { Dashboard } from './components/Dashboard.js';
+import { renderDashboard } from './components/Dashboard.js';
 
+const app = document.getElementById('app');
 
-Login();
-Dashboard();
+function showLogin() {
+  app.innerHTML = `
+    <div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Mini ERP</h2>
+        <form id="login-form" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Usuario / Email</label>
+            <input type="text" id="email" required class="w-full mt-1 p-2 border rounded-md border-gray-300">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+            <input type="password" id="password" required class="w-full mt-1 p-2 border rounded-md border-gray-300">
+          </div>
+          <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700">Iniciar Sesión</button>
+          <p id="error-msg" class="text-red-500 text-sm mt-2 hidden text-center"></p>
+        </form>
+      </div>
+    </div>
+  `;
 
-const loginForm = document.getElementById('login-form');
-const loginSection = document.getElementById('login-section');
-const productsSection = document.getElementById('products-section');
-const productsList = document.getElementById('products-list');
-const errorMsg = document.getElementById('error-msg');
-const logoutBtn = document.getElementById('logout-btn');
-
-if (loginForm) {
-  loginForm.addEventListener('submit', async (e) => {
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    errorMsg.textContent = 'Cargando...';
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('error-msg');
 
     try {
       const data = await authAPI.login(email, password);
-      const token = data.access || data.access_token;
+      const token = data.access || data.token || 'demo-token';
       localStorage.setItem('token', token);
-      
-      await loadProducts(token);
+      loadDashboard(token);
     } catch (err) {
-      errorMsg.textContent = 'Error de inicio de sesión. Revisa tus credenciales.';
+      errorMsg.textContent = 'Credenciales inválidas';
+      errorMsg.classList.remove('hidden');
     }
   });
 }
 
-if (logoutBtn) {
-  logoutBtn.addEventListener('click', () => {
+function loadDashboard(token) {
+  renderDashboard(app, token, () => {
     localStorage.removeItem('token');
-    loginSection.style.display = 'block';
-    productsSection.style.display = 'none';
+    showLogin();
   });
 }
 
-async function loadProducts(token) {
-  try {
-    const response = await productsAPI.getProducts(token);
-    const products = Array.isArray(response) ? response : (response.results || []);
-
-    productsList.innerHTML = products.map(p => `<li><strong>${p.name || p.title || 'Producto'}</strong> - $${p.price || 0}</li>`).join('');
-    
-    loginSection.style.display = 'none';
-    productsSection.style.display = 'block';
-  } catch (err) {
-    errorMsg.textContent = 'Error al cargar los productos.';
-  }
+const token = localStorage.getItem('token');
+if (token) {
+  loadDashboard(token);
+} else {
+  showLogin();
 }
