@@ -1,6 +1,9 @@
 import { authAPI, productsAPI } from './services/api.js';
-import { Login } from './components/Login.jsx';
-import { Dashboard } from './components/Dashboard.jsx';
+import { Login } from './components/Login.js';
+import { Dashboard } from './components/Dashboard.js';
+
+Login();
+Dashboard();
 
 const loginForm = document.getElementById('login-form');
 const loginSection = document.getElementById('login-section');
