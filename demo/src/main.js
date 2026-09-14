@@ -1,6 +1,8 @@
+import '../style.css';
 import { authAPI, productsAPI } from './services/api.js';
 import { Login } from './components/Login.js';
 import { Dashboard } from './components/Dashboard.js';
+
 
 Login();
 Dashboard();

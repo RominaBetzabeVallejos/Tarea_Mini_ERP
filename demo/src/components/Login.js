@@ -1,1 +1,3 @@
-export function Login() { console.log('Login listo'); }
+export function Login() {
+  console.log('Componente Login inicializado');
+}
