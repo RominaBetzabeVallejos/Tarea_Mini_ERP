@@ -1,36 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Mini ERP</title>
-</head>
-<body style="font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px;">
-  <h1>Mini ERP - Login y Productos</h1>
-
-  <!-- Formulario de Login -->
-  <div id="login-section">
-    <h2>Iniciar Sesión</h2>
-    <form id="login-form">
-      <div>
-        <label>Email:</label><br>
-        <input type="email" id="email" value="admin@minierp.com" required style="width: 100%; padding: 8px; margin: 5px 0;">
-      </div>
-      <div>
-        <label>Contraseña:</label><br>
-        <input type="password" id="password" value="test123456" required style="width: 100%; padding: 8px; margin: 5px 0;">
-      </div>
-      <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; margin-top: 10px;">Ingresar</button>
-    </form>
-    <p id="error-msg" style="color: red;"></p>
-  </div>
-
-  <!-- Sección de Productos -->
-  <div id="products-section" style="display: none;">
-    <h2>Lista de Productos</h2>
-    <ul id="products-list"></ul>
-    <button id="logout-btn" style="padding: 10px 20px; background: #dc3545; color: white; border: none; cursor: pointer;">Cerrar Sesión</button>
-  </div>
-
-  <script type="module" src="/src/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini ERP</title>
+  </head>
+  <body class="bg-gray-100">
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
