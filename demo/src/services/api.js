@@ -2,19 +2,11 @@ const API_URL = 'https://minierp.rbnetto.dev/api';
 
 export const authAPI = {
   async login(email, password) {
-    let res = await fetch(`${API_URL}/token/`, {
+    const res = await fetch(`${API_URL}/token/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: email, email, password })
     });
-
-    if (res.status === 404) {
-      res = await fetch(`${API_URL}/login/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-    }
 
     if (!res.ok) throw new Error('Credenciales incorrectas');
     return res.json();
@@ -23,26 +15,28 @@ export const authAPI = {
 
 export const productsAPI = {
   async getProducts(token) {
-    // Intenta primero con /products/products/ y luego con /products/
-    let res = await fetch(`${API_URL}/products/products/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    // Lista de endpoints candidatos del backend
+    const endpoints = [
+      '/products/products/',
+      '/inventory/products/',
+      '/inventory/',
+      '/products-list/',
+      '/products/'
+    ];
 
-    if (res.status === 404) {
-      res = await fetch(`${API_URL}/products/`, {
+    for (const endpoint of endpoints) {
+      const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         }
       });
+      if (res.status === 200) {
+        return await res.json();
+      }
     }
 
-    if (!res.ok) throw new Error('Error al obtener productos');
-    return res.json();
+    throw new Error('Endpoint de productos no encontrado (404)');
   }
 };
