@@ -1,6 +1,5 @@
 const API_URL = 'https://minierp.rbnetto.dev/api';
 
-// Lista de productos de respaldo (Fallback) en caso de que el servidor devuelva 404
 const MOCK_PRODUCTS = [
   { id: 1, name: 'Laptop Pro 15"', price: 1200 },
   { id: 2, name: 'Monitor 4K Ultra Slim', price: 380 },
@@ -39,13 +38,14 @@ export const productsAPI = {
 
       if (res.ok) {
         const data = await res.json();
-        return Array.isArray(data) ? data : (data.results || data.data || MOCK_PRODUCTS);
+        if (Array.isArray(data) && data.length > 0) return data;
+        if (data.results && data.results.length > 0) return data.results;
       }
     } catch (e) {
-      console.warn('API no disponible, usando fallback:', e);
+      console.warn('API de productos no disponible, cargando mock local.', e);
     }
 
-    // Retorna los productos de prueba para garantizar que el menú y la lista siempre se desplieguen
+  
     return MOCK_PRODUCTS;
   }
 };
