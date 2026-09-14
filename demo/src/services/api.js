@@ -2,12 +2,23 @@ const API_URL = 'https://minierp.rbnetto.dev/api';
 
 export const authAPI = {
   async login(email, password) {
-    const res = await fetch(`${API_URL}/users/login/`, {
+    
+    let res = await fetch(`${API_URL}/token/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ username: email, email, password })
     });
-    if (!res.ok) throw new Error('Credenciales incorrectas');
+
+    
+    if (res.status === 404) {
+      res = await fetch(`${API_URL}/login/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+    }
+
+    if (!res.ok) throw new Error('Credenciales incorrectas o error de servidor');
     return res.json();
   }
 };
