@@ -12,19 +12,15 @@ export const authAPI = {
       })
     });
 
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      console.error('Error detallado del login:', res.status, errData);
-      throw new Error('Credenciales o endpoint incorrectos');
-    }
-    
+    if (!res.ok) throw new Error('Credenciales incorrectas');
     return res.json();
   }
 };
 
 export const productsAPI = {
   async getProducts(token) {
-    const res = await fetch(`${API_URL}/products/`, {
+    // Apuntamos al endpoint registrado en la app de Django (/products/products/)
+    const res = await fetch(`${API_URL}/products/products/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
